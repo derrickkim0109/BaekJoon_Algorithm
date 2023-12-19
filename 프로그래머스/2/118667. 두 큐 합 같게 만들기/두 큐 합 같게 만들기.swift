@@ -1,43 +1,35 @@
 import Foundation
 
 func solution(_ queue1:[Int], _ queue2:[Int]) -> Int {
-    // 기준이 첫 Queue or 두 번째 Queue로 할지 알아야 한다. 
-    // pop과 insert는 한쌍으로 생각해야 한다.
-    // 모든 원소의 합
-    var answer: Int = 0
-    
-    let leftQueue = queue1
-    var rightQueue = queue2
-    
-    var leftOffset: Int = 0
-    var rightOffset: Int = queue1.count
-    
-    var totalQueue = leftQueue + rightQueue
-    var leftQueueSummary = queue1.map { $0 }.reduce(0, +)
-    
+    let totalQueue = queue1 + queue2
     let totalSummary = totalQueue.map { $0 }.reduce(0, +)
-    let targetSummary = totalSummary / 2 
+    let targetSummary = totalSummary / 2
      
+    var answer: Int = 0
+    var startIndex: Int = 0
+    var lastIndex: Int = queue1.count
+    var leftQueueSummary = queue1.map { $0 }.reduce(0, +)
+
     if totalSummary % 2 != 0 {
         return -1
     }
     
-    if targetSummary < leftQueue.max()! 
-    || targetSummary < rightQueue.max()! {
+    if targetSummary < queue1.max()!
+    || targetSummary < queue2.max()! {
         return -1
     }
     
-    while rightOffset < totalQueue.count && leftOffset <= rightOffset {
+    while lastIndex < totalQueue.count && startIndex <= lastIndex {
         if leftQueueSummary == targetSummary {
             return answer
         }
         
         if leftQueueSummary > targetSummary {
-            leftQueueSummary -= totalQueue[leftOffset]
-            leftOffset += 1
+            leftQueueSummary -= totalQueue[startIndex]
+            startIndex += 1
         } else {
-            leftQueueSummary += totalQueue[rightOffset]
-            rightOffset += 1
+            leftQueueSummary += totalQueue[lastIndex]
+            lastIndex += 1
         }
         
         answer += 1
