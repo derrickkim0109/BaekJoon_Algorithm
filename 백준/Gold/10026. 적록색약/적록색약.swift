@@ -39,6 +39,8 @@ func dfs(_ x: Int, _ y: Int, _ type: Person) {
 
         switch type {
         case .normal:
+            normalVisited[x][y] = true
+
             // R과 G를 같은 색으로 간주하는 경우 (적록색약인 사람)
             guard !normalVisited[nextX][nextY],
                     current == nextNode ||
@@ -46,15 +48,15 @@ func dfs(_ x: Int, _ y: Int, _ type: Person) {
                      && (nextNode == "R" || nextNode == "G")) else {
                 continue
             }
-            normalVisited[x][y] = true
             dfs(nextX, nextY, .normal)
         case .nonNormal:
+            nonNormalVisited[x][y] = true
+
             // 같은 색인 경우에만 이동 (적록색약인 사람의 시각에서는 R과 G도 같은 색으로 처리)
             guard !nonNormalVisited[nextX][nextY],
                   current == nextNode else {
                 continue
             }
-            nonNormalVisited[x][y] = true
             dfs(nextX, nextY, .nonNormal)
         }
     }
@@ -120,14 +122,14 @@ for x in 0..<n {
         // 적록색약인 사람이 아직 방문하지 않은 경우
         if !nonNormalVisited[x][y] {
             nonNormalCount += 1
-            //            dfs(x, y, .nonNormal)
+            dfs(x, y, .nonNormal)
             bfs(x, y, .nonNormal)
         }
 
         // 적록색약이 아닌 사람이 아직 방문하지 않은 경우
         if !normalVisited[x][y] {
             normalCount += 1
-            //            dfs(x, y, .normal)
+            dfs(x, y, .normal)
             bfs(x, y, .normal)
         }
     }
